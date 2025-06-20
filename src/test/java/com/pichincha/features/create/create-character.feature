@@ -3,9 +3,17 @@ Feature: H01 API REST de personajes de Marvel - Crear personaje
 
   Background:
     * configure ssl = true
-    * def baseUrl = 'http://bp-se-test-cabcd9b246a5.herokuapp.com'
+    * url port_marvel_api
     * def username = 'hberrezu'
-    * def basePath = baseUrl + '/' + username + '/api/characters'
+    * def basePath = '/' + username + '/api/characters'
+    * def utils = karate.call('create-character_utils.js')
+    * def schemaOk = utils.schemaOk
+    * def schemaError = utils.schemaError
+    * def generateRandomCharacter = utils.generateRandomCharacter
+    * def generateInvalidCharacter = utils.generateInvalidCharacter
+    * def characterTemplates = read('classpath:data/marvel_api/character_templates.json')
+    * def characterSchema = read('classpath:data/marvel_api/character_schema.json')
+    * def errorSchema = read('classpath:data/marvel_api/error_schema.json')
     * def generarHeaders =
       """
       function() {
@@ -19,35 +27,41 @@ Feature: H01 API REST de personajes de Marvel - Crear personaje
 
   @id:4 @solicitudExitosa201
   Scenario: T-API-H01-CA04-Crear personaje exitoso 201 - karate
-    * def randomName = 'Thor_' + java.util.UUID.randomUUID().toString().substring(0, 8)
-    Given url basePath
-    And request { "name": "#(randomName)", "alterego": "Thor Odinson", "description": "God of Thunder", "powers": ["Lightning", "Mjolnir", "Strength"] }
+    * def randomCharacter = generateRandomCharacter()
+    Given path basePath
+    And request randomCharacter
     When method POST
     Then status 201
     And match response != null
     And match response.id != null
+    And match response == schemaOk()
 
   @id:5 @nombreDuplicado400
   Scenario: T-API-H01-CA05-Crear personaje con nombre duplicado 400 - karate
     # Primero creamos un personaje con nombre aleatorio
-    * def randomName = 'SpiderMan_' + java.util.UUID.randomUUID().toString().substring(0, 8)
-    Given url basePath
-    And request { "name": "#(randomName)", "alterego": "Peter Parker", "description": "Spider powers", "powers": ["Spider-sense", "Wall-crawling"] }
+    * def randomCharacter = generateRandomCharacter()
+    Given path basePath
+    And request randomCharacter
     When method POST
     Then status 201
 
     # Intentamos crear otro con el mismo nombre
-    Given url basePath
-    And request { "name": "#(randomName)", "alterego": "Otro", "description": "Otro", "powers": ["Otro"] }
+    Given path basePath
+    * def duplicateCharacter = randomCharacter
+    * set duplicateCharacter.alterego = "Otro"
+    * set duplicateCharacter.description = "Otro"
+    * set duplicateCharacter.powers = ["Otro"]
+    And request duplicateCharacter
     When method POST
     Then status 400
     And match response.error == 'Character name already exists'
-    And match response == { error: 'Character name already exists' }
+    And match response == schemaError()
 
   @id:6 @camposRequeridosFaltantes400
   Scenario: T-API-H01-CA06-Crear personaje con campos requeridos faltantes 400 - karate
-    Given url basePath
-    And request { "name": "", "alterego": "", "description": "", "powers": [] }
+    * def invalidCharacter = generateInvalidCharacter()
+    Given path basePath
+    And request invalidCharacter
     When method POST
     Then status 400
     And match response.name == 'Name is required'

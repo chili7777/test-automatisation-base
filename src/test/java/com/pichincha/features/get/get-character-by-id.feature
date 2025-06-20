@@ -3,9 +3,15 @@ Feature: H01 API REST de personajes de Marvel - Obtener personaje por ID
 
   Background:
     * configure ssl = true
-    * def baseUrl = 'http://bp-se-test-cabcd9b246a5.herokuapp.com'
+    * url port_marvel_api
     * def username = 'hberrezu'
-    * def basePath = baseUrl + '/' + username + '/api/characters'
+    * def basePath = '/' + username + '/api/characters'
+    * def utils = karate.call('get-character-by-id_utils.js')
+    * def schemaOk = utils.schemaOk
+    * def schemaError = utils.schemaError
+    * def generateRandomId = utils.generateRandomId
+    * def characterSchema = read('classpath:data/marvel_api/character_schema.json')
+    * def errorSchema = read('classpath:data/marvel_api/error_schema.json')
     * def generarHeaders =
       """
       function() {
@@ -19,16 +25,17 @@ Feature: H01 API REST de personajes de Marvel - Obtener personaje por ID
 
   @id:2 @solicitudExitosa200
   Scenario: T-API-H01-CA02-Obtener personaje por ID exitoso 200 - karate
-    Given url basePath + '/1'
+    Given path basePath + '/1'
     When method GET
     Then status 200
     And match response != null
     And match response.id == 1
+    And match response == schemaOk()
 
   @id:3 @personajeNoExiste404
   Scenario: T-API-H01-CA03-Obtener personaje por ID inexistente 404 - karate
-    Given url basePath + '/999'
+    Given path basePath + '/999'
     When method GET
     Then status 404
     And match response.error == 'Character not found'
-    And match response == { error: 'Character not found' }
+    And match response == schemaError()

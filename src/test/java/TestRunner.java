@@ -20,13 +20,10 @@ public class TestRunner {
         String dateTime = dateFormat.format(new Date());
         String reportDir = "build/karate-reports_" + dateTime;
 
-        Results results = Runner.path("classpath:get-characters.feature",
-                                     "classpath:get-character-by-id.feature",
-                                     "classpath:create-character.feature",
-                                     "classpath:update-character.feature",
-                                     "classpath:delete-character.feature")
+        Results results = Runner.path("src/test/java/com/pichincha/features")
                               .outputCucumberJson(true)
                               .reportDir(reportDir)
+                              .configDir("src/test/java")
                               .parallel(1);
 
         generateReport(results.getReportDir());

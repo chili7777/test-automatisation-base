@@ -3,9 +3,15 @@ Feature: H01 API REST de personajes de Marvel - Obtener todos los personajes
 
   Background:
     * configure ssl = true
-    * def baseUrl = 'http://bp-se-test-cabcd9b246a5.herokuapp.com'
+    * url port_marvel_api
     * def username = 'hberrezu'
-    * def basePath = baseUrl + '/' + username + '/api/characters'
+    * def basePath = '/' + username + '/api/characters'
+    * path basePath
+    * def utils = karate.call('get-characters_utils.js')
+    * def schemaOk = utils.schemaOk
+    * def schemaError = utils.schemaError
+    * def characterSchema = read('classpath:data/marvel_api/character_schema.json')
+    * def errorSchema = read('classpath:data/marvel_api/error_schema.json')
     * def generarHeaders =
       """
       function() {
@@ -19,7 +25,6 @@ Feature: H01 API REST de personajes de Marvel - Obtener todos los personajes
 
   @id:1 @solicitudExitosa200
   Scenario: T-API-H01-CA01-Obtener todos los personajes 200 - karate
-    Given url basePath
     When method GET
     Then status 200
     And match response != null

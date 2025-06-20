@@ -22,7 +22,8 @@ dependencies {
             "com.intuit.karate:karate-apache:0.9.6",
             "net.masterthought:cucumber-reporting:5.8.1",
             'junit:junit:4.13.2',
-            'commons-io:commons-io:2.11.0'
+            'commons-io:commons-io:2.11.0',
+            'net.datafaker:datafaker:1.9.0'
 }
 
 test {
