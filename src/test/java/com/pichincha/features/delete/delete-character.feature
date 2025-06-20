@@ -6,9 +6,9 @@ Feature: H01 API REST de personajes de Marvel - Eliminar personaje
     * url port_marvel_api
     * def username = 'hberrezu'
     * def basePath = '/' + username + '/api/characters'
-    * def utils = karate.call('delete-character_utils.js')
-    * def schemaError = utils.schemaError
-    * def generateRandomCharacterForDeletion = utils.generateRandomCharacterForDeletion
+    * copy localUtils = call setLocalUtils()
+    * def schemaError = localUtils.schemaError
+    * def generateRandomCharacterForDeletion = localUtils.generateRandomCharacterForDeletion
     * def errorSchema = read('classpath:data/marvel_api/error_schema.json')
     * def generarHeaders =
       """

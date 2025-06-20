@@ -6,10 +6,10 @@ Feature: H01 API REST de personajes de Marvel - Obtener personaje por ID
     * url port_marvel_api
     * def username = 'hberrezu'
     * def basePath = '/' + username + '/api/characters'
-    * def utils = karate.call('get-character-by-id_utils.js')
-    * def schemaOk = utils.schemaOk
-    * def schemaError = utils.schemaError
-    * def generateRandomId = utils.generateRandomId
+    * copy localUtils = call setLocalUtils()
+    * def schemaOk = localUtils.schemaOk
+    * def schemaError = localUtils.schemaError
+    * def generateRandomId = localUtils.generateRandomId
     * def characterSchema = read('classpath:data/marvel_api/character_schema.json')
     * def errorSchema = read('classpath:data/marvel_api/error_schema.json')
     * def generarHeaders =
