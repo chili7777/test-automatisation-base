@@ -1,37 +1,18 @@
-import com.intuit.karate.junit5.Karate;
+import com.intuit.karate.Results;
+import com.intuit.karate.Runner;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class KarateBasicTest {
     static {
         System.setProperty("karate.ssl", "true");
     }
 
-    @Karate.Test
-    Karate testAll() {
-        return Karate.run().relativeTo(getClass());
-    }
-
-    @Karate.Test
-    Karate testGetCharacters() {
-        return Karate.run("classpath:get-characters.feature");
-    }
-
-    @Karate.Test
-    Karate testGetCharacterById() {
-        return Karate.run("classpath:get-character-by-id.feature");
-    }
-
-    @Karate.Test
-    Karate testCreateCharacter() {
-        return Karate.run("classpath:create-character.feature");
-    }
-
-    @Karate.Test
-    Karate testUpdateCharacter() {
-        return Karate.run("classpath:update-character.feature");
-    }
-
-    @Karate.Test
-    Karate testDeleteCharacter() {
-        return Karate.run("classpath:delete-character.feature");
+    @Test
+    void testAll() {
+        Results results = Runner.path("src/test/java/com/pichincha/features")
+                              .configDir("src/test/java")
+                              .parallel(1);
+        assertEquals(0, results.getFailCount(), results.getErrorMessages());
     }
 }

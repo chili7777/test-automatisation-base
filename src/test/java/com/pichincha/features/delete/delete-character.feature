@@ -3,9 +3,13 @@ Feature: H01 API REST de personajes de Marvel - Eliminar personaje
 
   Background:
     * configure ssl = true
-    * def baseUrl = 'http://bp-se-test-cabcd9b246a5.herokuapp.com'
+    * url port_marvel_api
     * def username = 'hberrezu'
-    * def basePath = baseUrl + '/' + username + '/api/characters'
+    * def basePath = '/' + username + '/api/characters'
+    * def utils = karate.call('delete-character_utils.js')
+    * def schemaError = utils.schemaError
+    * def generateRandomCharacterForDeletion = utils.generateRandomCharacterForDeletion
+    * def errorSchema = read('classpath:data/marvel_api/error_schema.json')
     * def generarHeaders =
       """
       function() {
@@ -20,15 +24,15 @@ Feature: H01 API REST de personajes de Marvel - Eliminar personaje
   @id:9 @solicitudExitosa204
   Scenario: T-API-H01-CA09-Eliminar personaje exitoso 204 - karate
     # Primero creamos un personaje con nombre aleatorio
-    * def randomName = 'Captain_' + java.util.UUID.randomUUID().toString().substring(0, 8)
-    Given url basePath
-    And request { "name": "#(randomName)", "alterego": "Steve Rogers", "description": "Super soldier", "powers": ["Strength", "Shield"] }
+    * def randomCharacter = generateRandomCharacterForDeletion()
+    Given path basePath
+    And request randomCharacter
     When method POST
     Then status 201
     * def personajeId = response.id
 
     # Eliminamos el personaje
-    Given url basePath + '/' + personajeId
+    Given path basePath + '/' + personajeId
     When method DELETE
     Then status 204
     # For 204 No Content responses, we don't need to check the response body
@@ -36,8 +40,8 @@ Feature: H01 API REST de personajes de Marvel - Eliminar personaje
 
   @id:10 @personajeNoExiste404
   Scenario: T-API-H01-CA10-Eliminar personaje inexistente 404 - karate
-    Given url basePath + '/999'
+    Given path basePath + '/999'
     When method DELETE
     Then status 404
     And match response.error == 'Character not found'
-    And match response == { error: 'Character not found' }
+    And match response == schemaError()

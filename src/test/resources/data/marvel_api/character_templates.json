@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Iron Man",
+    "alterego": "Tony Stark",
+    "description": "Genius billionaire playboy philanthropist",
+    "powers": ["Armor", "Flight", "Repulsor Rays"]
+  },
+  {
+    "name": "Captain America",
+    "alterego": "Steve Rogers",
+    "description": "Super soldier and leader of the Avengers",
+    "powers": ["Super Strength", "Enhanced Agility", "Vibranium Shield"]
+  },
+  {
+    "name": "Thor",
+    "alterego": "Thor Odinson",
+    "description": "God of Thunder from Asgard",
+    "powers": ["Lightning Control", "Mjolnir", "Superhuman Strength"]
+  },
+  {
+    "name": "Black Widow",
+    "alterego": "Natasha Romanoff",
+    "description": "Master spy and assassin",
+    "powers": ["Combat Skills", "Espionage", "Widow's Bite"]
+  },
+  {
+    "name": "Hulk",
+    "alterego": "Bruce Banner",
+    "description": "Scientist transformed by gamma radiation",
+    "powers": ["Super Strength", "Invulnerability", "Regeneration"]
+  }
+]
