@@ -7,9 +7,9 @@ Feature: H01 API REST de personajes de Marvel - Obtener todos los personajes
     * def username = 'hberrezu'
     * def basePath = '/' + username + '/api/characters'
     * path basePath
-    * def utils = karate.call('get-characters_utils.js')
-    * def schemaOk = utils.schemaOk
-    * def schemaError = utils.schemaError
+    * copy localUtils = call setLocalUtils()
+    * def schemaOk = localUtils.schemaOk
+    * def schemaError = localUtils.schemaError
     * def characterSchema = read('classpath:data/marvel_api/character_schema.json')
     * def errorSchema = read('classpath:data/marvel_api/error_schema.json')
     * def generarHeaders =
